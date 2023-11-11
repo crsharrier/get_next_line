@@ -1,11 +1,34 @@
 NAME:= get_next_line
 CC:= cc
 CFLAGS:= -Wall -Wextra -Werror
-SRCS:= get_next_line main get_next_line_utils
-PREPROC:= -D BUFFER_SIZE=4
+SRCS:= get_next_line.c testing.c get_next_line_utils.c
+OBJS := $(SRCS:.c=.o)
 
-all:
-	$(CC) $(CFLAGS) $(PREPROC) get_next_line.c main.c get_next_line_utils.c
+#BUFFER:= -D BUFFER_SIZE=9223372036854775807
+BUFFER:= -D BUFFER_SIZE=1
 
-test:
-	$(CC) $(PREPROC) get_next_line.c main.c get_next_line_utils.c
+all:$(NAME)
+
+test:$(NAME)
+	make re && ./$(NAME) testfiles/helloworld.txt
+#./$(NAME) testfiles/emptyfile.txt
+#./$(NAME) testfiles/helloworld.txt
+
+stdin:$(NAME)
+	make re && ./$(NAME) 0
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+$(OBJS): %.o: %.c
+	$(CC) $(CFLAGS) $(BUFFER) -c $< -o $@
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+#git commit -m"working and tested for buffer sizes from 1 - max ULL. Tested with emptyfile and long-ish files"

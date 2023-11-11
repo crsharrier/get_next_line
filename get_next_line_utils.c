@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/10 17:23:47 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/11 12:18:32 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@ void	ft_strappend(char *suffix, char **str)
 	int		j;
 	char	*result;
 
-	//printf("ft_strlen(*str) = %i\n", ft_strlen(*str));
-	i = ft_strlen(*str);
-	j = ft_strlen(suffix);
-	result = malloc(sizeof(char) * (i + j + 1));
-	result[i + j] = '\0';
+	i = ft_strlen(*str) + ft_strlen(suffix);
+	result = malloc(sizeof(char) * (i + 1));
+	result[i] = '\0';
 	i = 0;
 	if (*str)
 	{
@@ -57,31 +55,6 @@ void	ft_strappend(char *suffix, char **str)
 	if (*str)
 		free(*str);
 	*str = result;
-}
-
-/*
-Returns a substring of s, from the start until p.
-*/
-char	*ft_substrp(char *s, char *p)
-{
-	int		i;
-	int		j;
-	char	*result;
-
-	i = 0;
-	while (s[i] && (s + i) != p)
-		i++;
-	if (!s[i])
-		return (NULL);
-	result = malloc(sizeof(char) * (i + 1));
-	result[i] = '\0';
-	j = 0;
-	while (j < i)
-	{
-		result[j] = s[j];
-		j++;
-	}
-	return (result);
 }
 
 static void	substr_alloc(char **s, char *result)
@@ -137,20 +110,3 @@ char	*ft_strchr(const char *s, int c)
 	}
 	return (NULL);
 }
-/*
-int main(void)
-{
-	char *str;
-	char *newline;
-
-
-	str = malloc(sizeof(char) * 13);
-	strcpy(str, "hello\nworld\n");
-	newline = ft_strchr(str, '\n');
-
-	printf("str = %s\n", str);
-	printf("Result for ft_psubstr(str, newline) = %s\n", ft_psubstr(str, newline));
-	printf("Result for ft_substrp(str, newline) = %s\n", ft_substrp(str, newline));
-
-	return (0);
-}*/
