@@ -30,5 +30,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-#git commit -m"working and tested for buffer sizes from 1 - max ULL. Tested with emptyfile and long-ish files"
