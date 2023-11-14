@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/14 12:40:36 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/14 17:19:27 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ void	ft_strappend(char *suffix, char **chars_read)
 	while (suffix[j])
 	{
 		result[i++] = suffix[j];
-		if (suffix[j++] == '\n')
-			break ;
+		j++;
 	}
 	if (*chars_read)
 		free(*chars_read);
@@ -93,7 +92,7 @@ void	ft_psubstr(char **s, char *p)
 	j = 0;
 	while (j < i)
 	{
-		result[j] = *(*s + j + start);
+		result[j] = (*s)[j + start];
 		j++;
 	}
 	substr_alloc(s, result);

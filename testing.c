@@ -67,6 +67,7 @@ void	test_filename(char *filename)
 		while(result)
 		{
 			printf_visible_newlines(result);
+			//printf("%s", result);
 			result = get_next_line(fd);
 		}
 	}

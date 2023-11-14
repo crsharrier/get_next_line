@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 07:14:18 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/14 12:44:42 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/14 17:52:53 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,26 @@
 /*
 Returns a substring of s, from the start until p.
 */
-void	ft_substrp(char **substr, char *p)
+char	*ft_substrp(char **chars_read, char *newline)
 {
 	int		i;
 	int		j;
 	char	*result;
 
 	i = 0;
-	while (*substr[i] && (*substr + i) != p)
+	while ((*chars_read)[i] && (*chars_read) + i != newline)
 		i++;
-	if (!(*substr)[i])
-		return ;
+	if (!(*chars_read)[i])
+		return (NULL);
 	result = malloc(sizeof(char) * (i + 1));
 	result[i] = '\0';
 	j = 0;
-	while (j < i)
+	while (j <= i)
 	{
-		result[j] = (*substr)[j];
+		result[j] = (*chars_read)[j];
 		j++;
 	}
-	substr_alloc(substr, result);
+	return (result);
 }
 
 void	*ft_calloc(size_t nmemb, size_t size)
@@ -59,6 +59,9 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (result);
 }
 
+/*
+Copies buffer into chars_read. Identifies newline char, if any.
+*/
 ssize_t	search_newline(int fd, char **chars_read, char **buffer, char **newline)
 {
 	ssize_t	status;
@@ -76,7 +79,7 @@ ssize_t	search_newline(int fd, char **chars_read, char **buffer, char **newline)
 	}
 	return (status);
 }
->
+
 char	*free_buffer(char **buffer)
 {
 	free(*buffer);
@@ -99,10 +102,12 @@ char	*get_next_line(int fd)
 	if (buffer == NULL)
 		return (NULL);
 	buffer[BUFFER_SIZE] = '\0';
+
 	status = search_newline(fd, &chars_read, &buffer, &newline);
 	if ((!status && !chars_read) || status == -1)
 		return (free_buffer(&buffer));
-	ft_substrp(&chars_read, newline);
+
+ 	substr = ft_substrp(&chars_read, newline);
 	if (substr == NULL)
 		substr = chars_read;
 	ft_psubstr(&chars_read, newline);

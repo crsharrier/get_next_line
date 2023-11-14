@@ -17,7 +17,7 @@ test:
 	$(CC) $(SRCS) $(BUFFER) testing.c -g -o $(TEST_NAME) && ./$(TEST_NAME)
 
 stdin:$(NAME)
-	make re && ./$(NAME) 0
+	make re && ./$(TEST_NAME) 0
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
