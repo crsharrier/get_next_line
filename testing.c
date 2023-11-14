@@ -3,6 +3,18 @@
 #include "get_next_line.h"
 #include <string.h>
 
+void	printf_visible_newlines(char *str)
+{
+	while (*str)
+	{
+		if (*str == '\n')
+			printf("\\n\n");
+		else
+			printf("%c", *str);
+		str++;
+	}
+}
+
 void	test_helpers()
 {
 	printf("\n===== TEST STRAPPEND =====\n");
@@ -27,16 +39,16 @@ void	test_helpers()
 	printf("strchr(str, '\\n') = %s\n", strchr(str, '\n'));
 
 	printf("\n===== TEST SUBSTRP =====\n");
-	char	*delim = ft_strchr(str, 'l');
-	printf("str = %s\n", str);
-	printf("substrp(%s, %s) = %s\n", str, delim, ft_substrp(str, delim));
-	printf("\n");
+	//char	*delim = ft_strchr(str, 'l');
+	//printf("str = %s\n", str);
+	//printf("substrp(%s, %s) = %s\n", str, delim, ft_substrp(&str, delim));
+	//printf("\n");
 
 	printf("\n===== TEST PSUBSTR =====\n");
-	printf("str = %s\n", str);
-	ft_psubstr(&str, delim);
-	printf("str after = %s\n", str);
-	printf("\n");
+	//printf("str = %s\n", str);
+	//ft_psubstr(&str, delim);
+	//printf("str after = %s\n", str);
+	//printf("\n");
 
 }
 
@@ -54,7 +66,7 @@ void	test_filename(char *filename)
 	{
 		while(result)
 		{
-			printf("%s\n", result);
+			printf_visible_newlines(result);
 			result = get_next_line(fd);
 		}
 	}

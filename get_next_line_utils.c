@@ -6,13 +6,13 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/11 12:18:32 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/14 12:40:36 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(char *str)
+int	ft_strlen(char *str, int limit_nl)
 {
 	int	i;
 
@@ -20,7 +20,11 @@ int	ft_strlen(char *str)
 	if (!str)
 		return (0);
 	while (str[i])
+	{
+		if (limit_nl && str[i] == '\n')
+			return (i + 1);
 		i++;
+	}
 	return (i);
 }
 
@@ -28,21 +32,21 @@ int	ft_strlen(char *str)
 Takes a pointer to a string literal.
 Appends suffix to the end of *str.
 */
-void	ft_strappend(char *suffix, char **str)
+void	ft_strappend(char *suffix, char **chars_read)
 {
 	int		i;
 	int		j;
 	char	*result;
 
-	i = ft_strlen(*str) + ft_strlen(suffix);
+	i = ft_strlen(*chars_read, 0) + ft_strlen(suffix, 1);
 	result = malloc(sizeof(char) * (i + 1));
 	result[i] = '\0';
 	i = 0;
-	if (*str)
+	if (*chars_read)
 	{
-		while ((*str)[i])
+		while ((*chars_read)[i])
 		{
-			result[i] = (*str)[i];
+			result[i] = (*chars_read)[i];
 			i++;
 		}
 	}
@@ -50,22 +54,22 @@ void	ft_strappend(char *suffix, char **str)
 	while (suffix[j])
 	{
 		result[i++] = suffix[j];
-		j++;
+		if (suffix[j++] == '\n')
+			break ;
 	}
-	if (*str)
-		free(*str);
-	*str = result;
+	if (*chars_read)
+		free(*chars_read);
+	*chars_read = result;
 }
 
-static void	substr_alloc(char **s, char *result)
+void	substr_alloc(char **s, char *result)
 {
 	free(*s);
 	*s = result;
 }
 
 /*
-Returns a substring of s, from p until the end.
-Takes pointer to string literal, to be able to free *s.
+Modifies string literal at **s to only contain chars from p until the end.
 */
 void	ft_psubstr(char **s, char *p)
 {
@@ -81,9 +85,8 @@ void	ft_psubstr(char **s, char *p)
 		return ;
 	i++;
 	start = i;
-	j = i;
 	i = 0;
-	while (*(*s + j++))
+	while (*(*s + i))
 		i++;
 	result = malloc(sizeof(char) * (i + 1));
 	result[i] = '\0';

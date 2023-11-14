@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 07:14:55 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/11 12:45:12 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/14 12:43:37 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@
 # include <limits.h>
 
 char	*get_next_line(int fd);
-char	*ft_substrp(char *s, char *p);
 char	*ft_strchr(const char *s, int c);
+void	substr_alloc(char **s, char *result);
 void	ft_psubstr(char **s, char *p);
+void	ft_substrp(char **substr, char *p);
 void	ft_strappend(char *suffix, char **str);
 
 #endif
