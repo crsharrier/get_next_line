@@ -10,7 +10,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/test.out",
 			"args": [
-				"testfiles/multiple_nlx5"
+				"testfiles/empty"
 			],
 			"cwd": "${workspaceFolder}",
 			"MIMode": "gdb",

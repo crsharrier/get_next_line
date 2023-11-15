@@ -4,10 +4,8 @@
 		{
 			"label": "Build test from Makefile",
 			"type": "shell",
-			"command": "make",
-			"args": [
-				"test"
-			],
+			"command": "make test",
+			"args": [],
 			"group": {
 				"kind": "build",
 				"isDefault": true

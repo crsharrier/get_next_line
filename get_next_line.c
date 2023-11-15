@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 07:14:18 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/14 17:52:53 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/15 16:54:20 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ char	*ft_substrp(char **chars_read, char *newline)
 		i++;
 	if (!(*chars_read)[i])
 		return (NULL);
-	result = malloc(sizeof(char) * (i + 1));
-	result[i] = '\0';
+	result = malloc(sizeof(char) * (i + 2));
+	result[i + 1] = '\0';
 	j = 0;
 	while (j <= i)
 	{
@@ -62,7 +62,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 /*
 Copies buffer into chars_read. Identifies newline char, if any.
 */
-ssize_t	search_newline(int fd, char **chars_read, char **buffer, char **newline)
+ssize_t	search_newline(int fd, char **buffer, char **newline)
 {
 	ssize_t	status;
 
@@ -74,8 +74,6 @@ ssize_t	search_newline(int fd, char **chars_read, char **buffer, char **newline)
 			return (status);
 		else if (status != BUFFER_SIZE)
 			(*buffer)[status] = '\0';
-		ft_strappend(*buffer, chars_read);
-		*newline = ft_strchr(*chars_read, '\n');
 	}
 	return (status);
 }
@@ -103,13 +101,18 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buffer[BUFFER_SIZE] = '\0';
 
-	status = search_newline(fd, &chars_read, &buffer, &newline);
+	status = search_newline(fd, &buffer, &newline);
+	ft_strappend(buffer, &chars_read);
+	if (*chars_read == '\n')
+		status = 1;
+	newline = ft_strchr(chars_read, '\n');
 	if ((!status && !chars_read) || status == -1)
 		return (free_buffer(&buffer));
 
  	substr = ft_substrp(&chars_read, newline);
 	if (substr == NULL)
-		substr = chars_read;
+		return (free_buffer(&buffer));
+	//substr = chars_read;
 	ft_psubstr(&chars_read, newline);
 	free_buffer(&buffer);
 	return (substr);

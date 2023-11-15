@@ -87,6 +87,11 @@ int main(int argc, char **argv)
 	if (strcmp(argv[1],"0") == 0)
 		get_next_line(0);
 	else 
-		test_filename(argv[1]);
+	{
+		//test_filename(argv[1]);
+		int	fd = open(argv[1], O_RDONLY);
+		get_next_line(fd);
+		get_next_line(fd);
+	}
 	return (0);
 }
