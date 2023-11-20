@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "get_next_line.h"
 #include <string.h>
+#include <time.h>
 
 void	printf_visible_newlines(char *str)
 {
@@ -17,6 +18,7 @@ void	printf_visible_newlines(char *str)
 
 void	test_helpers()
 {
+/*
 	printf("\n===== TEST SPLIT =====\n");
 	char *split_str1 = "Hello\nWorld";
 	char *split_str2 = "";
@@ -24,22 +26,23 @@ void	test_helpers()
 	char *split_str4 = "\n";
 	char *split_result = NULL;
 
-	ft_split(split_str1, &split_result, false);
+	gnl_split(split_str1, &split_result, false);
 	printf("First half of %s = %s\n", split_str1, split_result);
-	ft_split(split_str1, &split_result, true);
+	gnl_split(split_str1, &split_result, true);
 	printf("Second half of %s = %s\n", split_str1, split_result);
-	ft_split(split_str2, &split_result, false);
+	gnl_split(split_str2, &split_result, false);
 	printf("First half of %s = %s\n", split_str2, split_result);
-	ft_split(split_str2, &split_result, true);
+	gnl_split(split_str2, &split_result, true);
 	printf("Second half of %s = %s\n", split_str2, split_result);
-	ft_split(split_str3, &split_result, false);
+	gnl_split(split_str3, &split_result, false);
 	printf("First half of %s = %s\n", split_str3, split_result);
-	ft_split(split_str3, &split_result, true);
+	gnl_split(split_str3, &split_result, true);
 	printf("Second half of %s = %s\n", split_str3, split_result);
-	ft_split(split_str4, &split_result, false);
+	gnl_split(split_str4, &split_result, false);
 	printf("First half of %s = %s\n", split_str4, split_result);
-	ft_split(split_str4, &split_result, true);
+	gnl_split(split_str4, &split_result, true);
 	printf("Second half of %s = %s\n", split_str4, split_result);
+*/
 /*
 	printf("\n===== TEST STRAPPEND =====\n");
 	char	*suffix = "World";
@@ -108,7 +111,7 @@ void	test_filename(char *filename)
 
 int main(void)
 {
-	char	*testfile = "testfiles/helloworld";
+	char	*testfile = "testfiles/41_with_nl";
 	char	*status;
 	int		fd;
 	int		c;
@@ -117,10 +120,17 @@ int main(void)
 
 	//printf("result = %s\n", get_next_line(fd));
 
+	clock_t t; 
+    t = clock(); 
+
 	printf("Testfile = %s\n", testfile);
 	test_filename(testfile);
 
 	//test_helpers();
+	
+    t = clock() - t; 
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; 
+	printf("get_next_line() took %f seconds to execute \n", time_taken); 
 
 	close(fd);
 	return (0);
