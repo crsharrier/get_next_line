@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 07:14:55 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/14 17:37:27 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/19 17:12:38 by crsharrier       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <limits.h>
+# include <stdbool.h>
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
-char	*ft_substrp(char **chars_read, char *newline);
+
+void    ft_split(char *str, char **dest, bool second_half);
+char	*ft_substrp(char **chars_read);
+void	ft_psubstr(char **chars_read);
 void	substr_alloc(char **s, char *result);
-void	ft_psubstr(char **s, char *p);
 void	ft_strappend(char *suffix, char **str);
 
 #endif

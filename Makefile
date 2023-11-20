@@ -9,7 +9,7 @@ OBJS := $(SRCS:.c=.o)
 TESTFILE:= testfiles/helloworld.txt
 
 #BUFFER:= -D BUFFER_SIZE=9223372036854775807
-BUFFER:= -D BUFFER_SIZE=42
+BUFFER:= -D BUFFER_SIZE=1
 
 all:$(NAME)
 

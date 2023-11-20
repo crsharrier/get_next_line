@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/14 17:19:27 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/20 10:20:19 by crsharrier       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_strlen(char *str, int limit_nl)
+int	ft_strlen(char *str, bool limit_nl)
 {
 	int	i;
 
@@ -21,16 +21,61 @@ int	ft_strlen(char *str, int limit_nl)
 		return (0);
 	while (str[i])
 	{
-		if (limit_nl && str[i] == '\n')
-			return (i + 1);
+		if (limit_nl)
+		{
+			if(str[i] == '\n')
+				return (i + 1);
+		}
 		i++;
 	}
 	return (i);
 }
 
+/*Returns a pointer to the first occurence of c in s*/
+char	*ft_strchr(const char *s, int c)
+{
+	char	*p;
+
+	p = (char *)s;
+	while (*p)
+	{
+		if (*p == c)
+			return (p);
+		p++;
+	}
+	return (NULL);
+}
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	len;
+
+	len = 0;
+	while(src[len++]);
+	len--;
+	if (!size)
+		return (len);
+	i = 0;
+	while (i++ < (size - 1) && *src)
+		*dst++ = *src++;
+	*dst = '\0';
+	return (len);
+}
+
 /*
-Takes a pointer to a string literal.
-Appends suffix to the end of *str.
+Frees dest if not null.
+Assigns result to *dest.
+*/
+void	substr_alloc(char **dest, char *result)
+{
+	if (*dest)
+		free(*dest);
+	*dest = result;
+}
+
+/*
+Appends suffix to the end of *chars_read.
 */
 void	ft_strappend(char *suffix, char **chars_read)
 {
@@ -38,7 +83,7 @@ void	ft_strappend(char *suffix, char **chars_read)
 	int		j;
 	char	*result;
 
-	i = ft_strlen(*chars_read, 0) + ft_strlen(suffix, 1);
+	i = ft_strlen(*chars_read, false) + ft_strlen(suffix, true);
 	result = malloc(sizeof(char) * (i + 1));
 	result[i] = '\0';
 	i = 0;
@@ -56,21 +101,13 @@ void	ft_strappend(char *suffix, char **chars_read)
 		result[i++] = suffix[j];
 		j++;
 	}
-	if (*chars_read)
-		free(*chars_read);
-	*chars_read = result;
-}
-
-void	substr_alloc(char **s, char *result)
-{
-	free(*s);
-	*s = result;
+	substr_alloc(chars_read, result);
 }
 
 /*
-Modifies string literal at **s to only contain chars from p until the end.
+Modifies string literal at **chars_read to only contain chars from newline until the end.
 */
-void	ft_psubstr(char **s, char *p)
+void	ft_psubstr(char **chars_read)
 {
 	int		i;
 	int		j;
@@ -78,37 +115,91 @@ void	ft_psubstr(char **s, char *p)
 	char	*result;
 
 	i = 0;
-	while ((*s)[i] && (*s) + i != p)
+	while ((*chars_read)[i] && (*chars_read)[i] != '\n')
 		i++;
-	if (!*(*s + i))
+	if (!(*chars_read)[i])//no newline was found
+	{
+		//*status = 0;
 		return ;
-	i++;
-	start = i;
+	}
+	start = i + 1;
 	i = 0;
-	while (*(*s + i))
+	while ((*chars_read)[i])
 		i++;
 	result = malloc(sizeof(char) * (i + 1));
 	result[i] = '\0';
 	j = 0;
 	while (j < i)
 	{
-		result[j] = (*s)[j + start];
+		result[j] = (*chars_read)[j + start];
 		j++;
 	}
-	substr_alloc(s, result);
+	if (*result)
+		substr_alloc(chars_read, result);
+	else
+	{
+		substr_alloc(chars_read, NULL);
+		free(result);
+	}
 }
 
-/*Returns a pointer to the first occurence of c in s*/
-char	*ft_strchr(const char *s, int c)
-{
-	char	*p;
 
-	p = (char *)s;
-	while (*p)
+void	ft_split(char *str, char **dest, bool second_half)
+{
+	char	*part1;
+	char	*part2;
+	int		len1;
+	int		len2;
+
+	if (!str[0])
+		return (substr_alloc(dest, NULL));
+	len1 = 0;
+	while ((str)[len1] && (str)[len1] != '\n')
+		len1++;
+	//len1 = ft_strlen(str, true);
+	if (!second_half)
 	{
-		if (*p == c)
-			return (p);
-		p++;
+		part1 = calloc(len1 + 2, sizeof(char));
+		ft_strlcpy(part1, str, len1 + 2);
+		substr_alloc(dest, part1);
+		//FREE PART1?
+		//free(part1);
+		return ;
 	}
-	return (NULL);
+	else
+	{
+		len2 = len1;
+		if (!str[len2])
+			return ;
+		len2 = ft_strlen(str + len1 + 1, false);
+		part2 = calloc(len2 + 1, sizeof(char));
+		ft_strlcpy(part2, str + len1, len2 + 1);
+		substr_alloc(dest, part2);
+		return ;
+	}	
+}
+
+/*
+Returns a substring of chars_read, from the start until newline, inclusive.
+*/
+char	*ft_substrp(char **chars_read)
+{
+	int		i;
+	int		j;
+	char	*result;
+
+	i = 0;
+	while ((*chars_read)[i] && (*chars_read)[i] != '\n')
+		i++;
+	if (!(*chars_read)[i])
+		return (NULL); //means newline wasnt found
+	result = malloc(sizeof(char) * (i + 2));
+	result[i + 1] = '\0';
+	j = 0;
+	while (j <= i)
+	{
+		result[j] = (*chars_read)[j];
+		j++;
+	}
+	return (result);
 }

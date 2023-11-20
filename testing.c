@@ -17,6 +17,30 @@ void	printf_visible_newlines(char *str)
 
 void	test_helpers()
 {
+	printf("\n===== TEST SPLIT =====\n");
+	char *split_str1 = "Hello\nWorld";
+	char *split_str2 = "";
+	char *split_str3 = "Hello\n";
+	char *split_str4 = "\n";
+	char *split_result = NULL;
+
+	ft_split(split_str1, &split_result, false);
+	printf("First half of %s = %s\n", split_str1, split_result);
+	ft_split(split_str1, &split_result, true);
+	printf("Second half of %s = %s\n", split_str1, split_result);
+	ft_split(split_str2, &split_result, false);
+	printf("First half of %s = %s\n", split_str2, split_result);
+	ft_split(split_str2, &split_result, true);
+	printf("Second half of %s = %s\n", split_str2, split_result);
+	ft_split(split_str3, &split_result, false);
+	printf("First half of %s = %s\n", split_str3, split_result);
+	ft_split(split_str3, &split_result, true);
+	printf("Second half of %s = %s\n", split_str3, split_result);
+	ft_split(split_str4, &split_result, false);
+	printf("First half of %s = %s\n", split_str4, split_result);
+	ft_split(split_str4, &split_result, true);
+	printf("Second half of %s = %s\n", split_str4, split_result);
+/*
 	printf("\n===== TEST STRAPPEND =====\n");
 	char	*suffix = "World";
 	char	*str = malloc(sizeof(char) * 6);
@@ -49,9 +73,10 @@ void	test_helpers()
 	//ft_psubstr(&str, delim);
 	//printf("str after = %s\n", str);
 	//printf("\n");
-
+*/
 }
 
+//read from FILENAME line my line
 void	test_filename(char *filename)
 {
 	int		fd;
@@ -64,11 +89,16 @@ void	test_filename(char *filename)
 	result = get_next_line(fd);
 	if (result)
 	{
-		while(result)
+		while(1)
 		{
-			printf_visible_newlines(result);
-			//printf("%s", result);
+			//printf_visible_newlines(result);
+			printf("%s", result);
 			result = get_next_line(fd);
+			if (!result)
+			{
+				printf("%s", result);
+				break ;
+			}
 		}
 	}
 	else
@@ -76,22 +106,22 @@ void	test_filename(char *filename)
 	printf("============================================================\n");
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
+	char	*testfile = "testfiles/helloworld";
+	char	*status;
+	int		fd;
+	int		c;
+
+	fd = open(testfile, O_RDONLY);
+
+	//printf("result = %s\n", get_next_line(fd));
+
+	printf("Testfile = %s\n", testfile);
+	test_filename(testfile);
+
 	//test_helpers();
-	if (argc != 2)
-	{
-		printf("Please provide a single testfile as argument, or '0' to read from stdin\n");
-		return (0);	
-	}
-	if (strcmp(argv[1],"0") == 0)
-		get_next_line(0);
-	else 
-	{
-		//test_filename(argv[1]);
-		int	fd = open(argv[1], O_RDONLY);
-		get_next_line(fd);
-		get_next_line(fd);
-	}
+
+	close(fd);
 	return (0);
 }
