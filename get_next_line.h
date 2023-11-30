@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 07:14:55 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 11:05:22 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:15:50 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,15 @@ typedef struct  s_Mem
 	char	*line;
 	int		status;
 	int		fd;
+	int		buf_len;
 	int		nl_index;
 	bool	nl_found;
 	bool	extra_exists;
 }				t_Mem;
 
+//int		gnl_strlen(char *str);
 char	*get_next_line(int fd);
-char	*gnl_strdup(const char *src);
+//char	*gnl_strdup(const char *src);
 void	*gnl_bzero(void *s, int n);
 void	*gnl_freeplace(char **old, char *new);
 void	init_gnl(int fd, char **extra_chars, t_Mem *mem);

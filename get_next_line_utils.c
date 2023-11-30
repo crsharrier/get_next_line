@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 12:18:41 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:16:01 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	*gnl_bzero(void *s, int n)
 		return (s);
 }
 
-
+/*
 char	*gnl_strdup(const char *src)
 {
 		char	*dest;
@@ -63,3 +63,4 @@ char	*gnl_strdup(const char *src)
 		}
 		return (dest);
 }
+*/

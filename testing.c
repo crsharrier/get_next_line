@@ -71,7 +71,7 @@ void	test_filename(char *filename)
 
 int main(void)
 {
-	char	*testfile = "testfiles/43_with_nl";
+	char	*testfile = "testfiles/alternate_line_nl_no_nl";
 	//char	*testfile = "testfiles/43_with_nl";
 	char	*status;
 	int		fd;
@@ -80,7 +80,7 @@ int main(void)
 	//test_helpers();
 
 	fd = open(testfile, O_RDONLY);
-	
+
 	//TEST A SINGLE GNL() CALL
 	//printf("result = %s", get_next_line(fd));
 

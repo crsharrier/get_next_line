@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 15:14:14 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 11:57:21 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:16:45 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Copies leftover chars from mem->buffer to mem->line. 
 Copies from newline + 1 until end of buffer.
 */
-void	copy_extra(t_Mem *mem)
+static void	copy_extra(t_Mem *mem)
 {
 	char	*extra;
 	int		i;
@@ -47,7 +47,7 @@ static void	append(t_Mem *mem, int end)
 	i = 0;
 	while (mem->line[i])
 		i++;
-	new_str = malloc(sizeof(char) * (i + end));
+	new_str = malloc(sizeof(char) * (i + end + 1));
 	new_str[i + end] = '\0';
 	i = 0;
 	while (mem->line[i])
@@ -64,8 +64,9 @@ static void	append(t_Mem *mem, int end)
 /*
 Searches for first occurrence of '\n' in mem->buffer.
 Sets nl_index accordingly.
+Returns the index of '\n' or '\0', whichever is found first.
 */
-static void	find_newline(t_Mem *mem)
+static int	find_newline(t_Mem *mem)
 {
 	int	i;
 
@@ -76,10 +77,11 @@ static void	find_newline(t_Mem *mem)
 		{
 			mem->nl_index = i;
 			mem->nl_found = true;
-			return ;
+			return (i);
 		}
 		i++;
 	}
+	return (i);
 }
 
 /*
@@ -97,8 +99,7 @@ static void	iterate(t_Mem *mem)
 
 	while (!mem->nl_found)
 	{
-		find_newline(mem);
-		end = BUFFER_SIZE;
+		end = find_newline(mem);
 		if (mem->nl_found)
 			end = mem->nl_index + 1;
 		append(mem, end);
@@ -125,15 +126,26 @@ char	*get_next_line(int fd)
 {
 	t_Mem		mem;
 	static char	*extra_chars = NULL;
+	int 		i;
 
 	init_gnl(fd, &extra_chars, &mem);
 	if (mem.extra_exists)
-		gnl_freeplace(&mem.buffer, gnl_strdup(extra_chars));
+	{
+		gnl_bzero(mem.buffer, BUFFER_SIZE + 1);
+		i = 0;
+		while (extra_chars[i])
+		{
+			mem.buffer[i] = extra_chars[i];
+			i++;
+		}
+	}
 	else
 		mem.status = read(fd, mem.buffer, BUFFER_SIZE);
-	if (!mem.status && !mem.extra_exists)
+	if ((mem.status == 0 || mem.status == -1) && !mem.extra_exists)
+	{
+		free(mem.buffer);
 		return gnl_freeplace(&extra_chars, NULL);
-
+	}
 	mem.line = gnl_bzero(malloc(sizeof(char)), 1);
 	iterate(&mem);
 	free(mem.buffer);
