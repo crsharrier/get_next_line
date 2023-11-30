@@ -3,67 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
+/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/29 17:50:22 by crsharrier       ###   ########.fr       */
+/*   Updated: 2023/11/30 12:18:41 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	gnl_strlcpy(char *dst, const char *src, size_t size)
+void	init_gnl(int fd, char **extra_chars, t_Mem *mem)
 {
-	size_t	i;
-	size_t	len;
-
-	len = 0;
-	while (src[len])
-		len++;
-	len--;
-	if (!size)
-		return (len);
-	i = 0;
-	while (i++ < (size - 1) && *src)
-		*dst++ = *src++;
-	*dst = '\0';
-	return (len);
+	mem->fd = fd;
+	mem->extra_chars = extra_chars;
+	mem->buffer = gnl_bzero(malloc(BUFFER_SIZE + 1 * sizeof(char)), BUFFER_SIZE + 1);
+	mem->line = NULL;
+	mem->status = 0;
+	mem->nl_found = false;
+	mem->nl_index = 0;
+	mem->extra_exists = false;
+	if (*extra_chars && (*extra_chars)[0])
+		mem->extra_exists = true;
 }
 
-void	free_memory(t_Mem *mem)
+void	*gnl_freeplace(char **old, char *new)
 {
-	free(mem->buffer);
-	free(mem->line);
+	if (*old)
+		free(*old);
+	*old = new;
+	return (NULL);
 }
 
-/*
-Frees dest if not null.
-Assigns result to *dest.
-*/
-void	gnl_free_assign(char **dest, char *result)
+void	*gnl_bzero(void *s, int n)
 {
-	free(*dest);
-	*dest = result;
+		int				i;
+		unsigned char	*p;
+
+		p = s;
+		i = 0;
+		while (i < n)
+			p[i++] = (unsigned char) '\0';
+		return (s);
 }
 
-void	*gnl_calloc(size_t nmemb, size_t size)
-{
-	unsigned long long	intended_size;
-	unsigned long long	i;
-	void				*result;
-	unsigned char		*p;
 
-	if (nmemb == 0 || size == 0)
-		return (malloc(0));
-	if ((unsigned long long)nmemb > ULLONG_MAX / (unsigned long long)size)
-		return (NULL);
-	intended_size = nmemb * size;
-	result = malloc(intended_size);
-	if (result == NULL)
-		return (result);
-	p = result;
-	i = 0;
-	while (i < intended_size)
-		p[i++] = 0;
-	return (result);
+char	*gnl_strdup(const char *src)
+{
+		char	*dest;
+		int		i;
+
+		i = 0;
+		while (*(src + i))
+				i++;
+		dest = malloc(sizeof(char) * (i + 1));
+		while (i >= 0)
+		{
+				*(dest + i) = *(src + i);
+				i--;
+		}
+		return (dest);
 }

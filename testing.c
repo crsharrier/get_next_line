@@ -71,7 +71,7 @@ void	test_filename(char *filename)
 
 int main(void)
 {
-	char	*testfile = "testfiles/multiple_nlx5";
+	char	*testfile = "testfiles/43_with_nl";
 	//char	*testfile = "testfiles/43_with_nl";
 	char	*status;
 	int		fd;
@@ -82,9 +82,9 @@ int main(void)
 	fd = open(testfile, O_RDONLY);
 	
 	//TEST A SINGLE GNL() CALL
-	printf("result = %s\n", get_next_line(fd));
+	//printf("result = %s", get_next_line(fd));
 
-/*
+
 	clock_t t; 
     t = clock(); 
 
@@ -94,7 +94,7 @@ int main(void)
     t = clock() - t; 
     double time_taken = ((double)t)/CLOCKS_PER_SEC; 
 	printf("get_next_line() took %f seconds to execute \n", time_taken); 
-*/
+
 	close(fd);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
+/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 07:14:55 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/29 17:55:37 by crsharrier       ###   ########.fr       */
+/*   Updated: 2023/11/30 11:05:22 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,13 @@ typedef struct  s_Mem
 	int		fd;
 	int		nl_index;
 	bool	nl_found;
+	bool	extra_exists;
 }				t_Mem;
 
 char	*get_next_line(int fd);
-void	*gnl_calloc(size_t nmemb, size_t size);
-void	free_memory(t_Mem *mem);
+char	*gnl_strdup(const char *src);
+void	*gnl_bzero(void *s, int n);
+void	*gnl_freeplace(char **old, char *new);
+void	init_gnl(int fd, char **extra_chars, t_Mem *mem);
+
 #endif
