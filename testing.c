@@ -4,52 +4,43 @@
 #include <string.h>
 #include <time.h>
 
-void	printf_visible_newlines(char *str)
-{
-	while (*str)
-	{
-		if (*str == '\n')
-			printf("\\n\n");
-		else
-			printf("%c", *str);
-		str++;
-	}
-}
 
 void	test_helpers()
 {
-/*
+
 	printf("\n===== TEST SPLIT =====\n");
 	char *split_str1 = "Hello\nWorld";
 	char *split_str2 = "";
-	char *split_str3 = "Hello\n";
+	char *split_str3 = "Hello";
 	char *split_str4 = "\n";
 	char *split_result = NULL;
-
-	gnl_split(split_str1, &split_result, false);
+/*
+	split(split_str1, &split_result, false);
 	printf("First half of %s = %s\n", split_str1, split_result);
-	gnl_split(split_str1, &split_result, true);
+	split(split_str1, &split_result, true);
 	printf("Second half of %s = %s\n", split_str1, split_result);
-	gnl_split(split_str2, &split_result, false);
+	split(split_str2, &split_result, false);
 	printf("First half of %s = %s\n", split_str2, split_result);
-	gnl_split(split_str2, &split_result, true);
+	split(split_str2, &split_result, true);
 	printf("Second half of %s = %s\n", split_str2, split_result);
-	gnl_split(split_str3, &split_result, false);
+
+	split(split_str3, &split_result, false);
 	printf("First half of %s = %s\n", split_str3, split_result);
-	gnl_split(split_str3, &split_result, true);
+	split(split_str3, &split_result, true);
 	printf("Second half of %s = %s\n", split_str3, split_result);
-	gnl_split(split_str4, &split_result, false);
+
+	split(split_str4, &split_result, false);
 	printf("First half of %s = %s\n", split_str4, split_result);
-	gnl_split(split_str4, &split_result, true);
+	split(split_str4, &split_result, true);
 	printf("Second half of %s = %s\n", split_str4, split_result);
 */
+
 /*
 	printf("\n===== TEST STRAPPEND =====\n");
-	char	*suffix = "World";
-	char	*str = malloc(sizeof(char) * 6);
-	strcpy(str, "Hello");
+	char	*suffix = strdup("World");
+	char	*str = strdup("Hello");
 	printf("str before = %s\n", str);
-	ft_strappend(suffix, &str);
+	strappend(suffix, &str);
 	printf("str after = %s\n", str);
 	printf("\n");
 
@@ -57,9 +48,11 @@ void	test_helpers()
 	str = malloc(sizeof(char));
 	str[0] = '\0';
 	printf("str before = %s\n", str);
-	ft_strappend(suffix, &str);
+	strappend(suffix, &str);
 	printf("str after = %s\n", str);
+*/
 
+/*
 	printf("\n===== TEST STRCHR =====\n");
 	printf("str = %s\n", str);
 	printf("strchr(str, 'r') = %s\n", strchr(str, 'r'));
@@ -90,35 +83,39 @@ void	test_filename(char *filename)
 	printf("==== getting \033[0;32m%s\033[0m line by line:\n", filename);
 	printf("============================================================\n");
 	result = get_next_line(fd);
-	if (result)
+	if (!result)
 	{
-		while(1)
-		{
-			//printf_visible_newlines(result);
-			printf("%s", result);
-			result = get_next_line(fd);
-			if (!result)
-			{
-				printf("%s", result);
-				break ;
-			}
-		}
-	}
-	else
 		printf("Either READ ERROR or File \"%s\" is empty!\n", filename);
+		return ;
+	}
+	int	i = 1;
+	while(result)
+	{
+		printf("\033[0;32m%i ->\033[0m", i);
+		printf("%s", result);
+		result = get_next_line(fd);
+		i++;
+	}
+	printf("\033[0;32m%i ->\033[0m", i);
+	printf("%s", result);
 	printf("============================================================\n");
 }
 
 int main(void)
 {
-	char	*testfile = "testfiles/41_with_nl";
+	char	*testfile = "testfiles/multiple_nlx5";
+	//char	*testfile = "testfiles/43_with_nl";
 	char	*status;
 	int		fd;
 	int		c;
 
-	fd = open(testfile, O_RDONLY);
+	//test_helpers();
 
+	fd = open(testfile, O_RDONLY);
+	
+	//TEST A SINGLE GNL() CALL
 	//printf("result = %s\n", get_next_line(fd));
+
 
 	clock_t t; 
     t = clock(); 
@@ -126,8 +123,6 @@ int main(void)
 	printf("Testfile = %s\n", testfile);
 	test_filename(testfile);
 
-	//test_helpers();
-	
     t = clock() - t; 
     double time_taken = ((double)t)/CLOCKS_PER_SEC; 
 	printf("get_next_line() took %f seconds to execute \n", time_taken); 

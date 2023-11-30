@@ -6,7 +6,7 @@
 /*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/20 16:47:47 by crsharrier       ###   ########.fr       */
+/*   Updated: 2023/11/24 11:36:45 by crsharrier       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,7 @@ Assigns result to *dest.
 */
 void	gnl_free_assign(char **dest, char *result)
 {
-	if (*dest)
-		free(*dest);
+	free(*dest);
 	*dest = result;
 }
 
