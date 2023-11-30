@@ -6,50 +6,11 @@
 /*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/24 11:36:45 by crsharrier       ###   ########.fr       */
+/*   Updated: 2023/11/29 17:50:22 by crsharrier       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-/*Returns a pointer to the first occurence of c in s*/
-char	*gnl_strchr(const char *s, int c)
-{
-	char	*p;
-
-	p = (char *)s;
-	while (*p)
-	{
-		if (*p == c)
-			return (p);
-		p++;
-	}
-	return (NULL);
-}
-
-
-/*
-Returns length of a string.
-If limit_nl == true, chars are counted up to and including a newline char.
-*/
-int	gnl_strlen(char *str, bool limit_nl)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-	{
-		if (limit_nl)
-		{
-			if(str[i] == '\n')
-				return (i + 1);
-		}
-		i++;
-	}
-	return (i);
-}
 
 size_t	gnl_strlcpy(char *dst, const char *src, size_t size)
 {
@@ -67,6 +28,12 @@ size_t	gnl_strlcpy(char *dst, const char *src, size_t size)
 		*dst++ = *src++;
 	*dst = '\0';
 	return (len);
+}
+
+void	free_memory(t_Mem *mem)
+{
+	free(mem->buffer);
+	free(mem->line);
 }
 
 /*

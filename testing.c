@@ -14,26 +14,6 @@ void	test_helpers()
 	char *split_str3 = "Hello";
 	char *split_str4 = "\n";
 	char *split_result = NULL;
-/*
-	split(split_str1, &split_result, false);
-	printf("First half of %s = %s\n", split_str1, split_result);
-	split(split_str1, &split_result, true);
-	printf("Second half of %s = %s\n", split_str1, split_result);
-	split(split_str2, &split_result, false);
-	printf("First half of %s = %s\n", split_str2, split_result);
-	split(split_str2, &split_result, true);
-	printf("Second half of %s = %s\n", split_str2, split_result);
-
-	split(split_str3, &split_result, false);
-	printf("First half of %s = %s\n", split_str3, split_result);
-	split(split_str3, &split_result, true);
-	printf("Second half of %s = %s\n", split_str3, split_result);
-
-	split(split_str4, &split_result, false);
-	printf("First half of %s = %s\n", split_str4, split_result);
-	split(split_str4, &split_result, true);
-	printf("Second half of %s = %s\n", split_str4, split_result);
-*/
 
 /*
 	printf("\n===== TEST STRAPPEND =====\n");
@@ -57,18 +37,6 @@ void	test_helpers()
 	printf("str = %s\n", str);
 	printf("strchr(str, 'r') = %s\n", strchr(str, 'r'));
 	printf("strchr(str, '\\n') = %s\n", strchr(str, '\n'));
-
-	printf("\n===== TEST SUBSTRP =====\n");
-	//char	*delim = ft_strchr(str, 'l');
-	//printf("str = %s\n", str);
-	//printf("substrp(%s, %s) = %s\n", str, delim, ft_substrp(&str, delim));
-	//printf("\n");
-
-	printf("\n===== TEST PSUBSTR =====\n");
-	//printf("str = %s\n", str);
-	//ft_psubstr(&str, delim);
-	//printf("str after = %s\n", str);
-	//printf("\n");
 */
 }
 
@@ -114,9 +82,9 @@ int main(void)
 	fd = open(testfile, O_RDONLY);
 	
 	//TEST A SINGLE GNL() CALL
-	//printf("result = %s\n", get_next_line(fd));
+	printf("result = %s\n", get_next_line(fd));
 
-
+/*
 	clock_t t; 
     t = clock(); 
 
@@ -126,7 +94,7 @@ int main(void)
     t = clock() - t; 
     double time_taken = ((double)t)/CLOCKS_PER_SEC; 
 	printf("get_next_line() took %f seconds to execute \n", time_taken); 
-
+*/
 	close(fd);
 	return (0);
 }
