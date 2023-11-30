@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 16:16:01 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 17:36:31 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void	init_gnl(int fd, char **extra_chars, t_Mem *mem)
 {
 	mem->fd = fd;
 	mem->extra_chars = extra_chars;
-	mem->buffer = gnl_bzero(malloc(BUFFER_SIZE + 1 * sizeof(char)), BUFFER_SIZE + 1);
+	mem->buffer = gnl_bzero(malloc(BUFFER_SIZE + 1 * sizeof(char)),
+			BUFFER_SIZE + 1);
 	mem->line = NULL;
 	mem->status = 0;
 	mem->nl_found = false;
@@ -34,16 +35,22 @@ void	*gnl_freeplace(char **old, char *new)
 	return (NULL);
 }
 
+char	*exit_gnl(t_Mem *mem, char *rtrn)
+{
+	free(mem->buffer);
+	return (rtrn);
+}
+
 void	*gnl_bzero(void *s, int n)
 {
-		int				i;
-		unsigned char	*p;
+	int				i;
+	unsigned char	*p;
 
-		p = s;
-		i = 0;
-		while (i < n)
-			p[i++] = (unsigned char) '\0';
-		return (s);
+	p = s;
+	i = 0;
+	while (i < n)
+		p[i++] = (unsigned char) '\0';
+	return (s);
 }
 
 /*

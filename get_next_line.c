@@ -6,7 +6,7 @@
 /*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 15:14:14 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 16:16:45 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:46:10 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ Append mem->buffer[0:end] to the end of mem->line
 */
 static void	append(t_Mem *mem, int end)
 {
-	int 	i;
+	int		i;
 	int		j;
 	char	*new_str;
-	
+
 	i = 0;
 	while (mem->line[i])
 		i++;
@@ -84,15 +84,6 @@ static int	find_newline(t_Mem *mem)
 	return (i);
 }
 
-/*
-Copies mem->buffer into mem->line.
-Adds BUFFER_SIZE at a time until newline is found or nothing to read.
-If nl_found, copies up to nl_index (inclusive) to mem->line, and copies extra to extra_chars.
-
-The if clause at the end:
-	- The main while loop escapes under two conditions: no more to read(); or nl_found.
-	- In the case that nl is found, we need to check if there is more content left in the buffer
-*/
 static void	iterate(t_Mem *mem)
 {
 	int		end;
@@ -113,7 +104,7 @@ static void	iterate(t_Mem *mem)
 	}
 	if (mem->nl_found && mem->buffer[mem->nl_index + 1])
 		copy_extra(mem);
-	else 
+	else
 		gnl_freeplace(mem->extra_chars, NULL);
 }
 
@@ -126,7 +117,7 @@ char	*get_next_line(int fd)
 {
 	t_Mem		mem;
 	static char	*extra_chars = NULL;
-	int 		i;
+	int			i;
 
 	init_gnl(fd, &extra_chars, &mem);
 	if (mem.extra_exists)
@@ -143,11 +134,10 @@ char	*get_next_line(int fd)
 		mem.status = read(fd, mem.buffer, BUFFER_SIZE);
 	if ((mem.status == 0 || mem.status == -1) && !mem.extra_exists)
 	{
-		free(mem.buffer);
-		return gnl_freeplace(&extra_chars, NULL);
+		gnl_freeplace(&extra_chars, NULL);
+		return (exit_gnl(&mem, NULL));
 	}
 	mem.line = gnl_bzero(malloc(sizeof(char)), 1);
 	iterate(&mem);
-	free(mem.buffer);
-	return (mem.line);
+	return (exit_gnl(&mem, mem.line));
 }
