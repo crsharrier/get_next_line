@@ -71,7 +71,7 @@ void	test_filename(char *filename)
 
 int main(void)
 {
-	char	*testfile = "testfiles/alternate_line_nl_no_nl";
+	char	*testfile = "testfiles/big_line_no_nl";
 	//char	*testfile = "testfiles/43_with_nl";
 	char	*status;
 	int		fd;

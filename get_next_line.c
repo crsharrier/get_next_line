@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
+/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 15:14:14 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/12/01 08:52:00 by crsharrier       ###   ########.fr       */
+/*   Updated: 2023/12/01 10:52:08 by csharrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ static void	_copy_extra_chars(t_Gnl *gnl)
 }
 
 /*
-Append gnl->buffer([0:end], non-inclusive) to the end of gnl->line
+Append gnl->buffer([0:end], non-inclusive) to the end of gnl->line.
+
+If gnl->line == NULL, neither while loop will execute
+	and gnl->line will be created instead of extended.
 */
 static void	_append_buffer_to_end_of_line(t_Gnl *gnl, int end)
 {
@@ -45,12 +48,12 @@ static void	_append_buffer_to_end_of_line(t_Gnl *gnl, int end)
 	char	*new_str;
 
 	i = 0;
-	while (gnl->line[i])
+	while (gnl->line && gnl->line[i])
 		i++;
 	new_str = malloc(sizeof(char) * (i + end + 1));
 	new_str[i + end] = '\0';
 	i = 0;
-	while (gnl->line[i])
+	while (gnl->line && gnl->line[i])
 	{
 		new_str[i] = gnl->line[i];
 		i++;
@@ -109,9 +112,22 @@ static void	iterate(t_Gnl *gnl)
 }
 
 /*
-If extra_exists, populate buffer with extra_chars and don't read 
-Exit if there are no extra chars and status = 0
-Else, iterate()
+Main gnl() function.
+
+Initialises gnl struct.
+
+if extra_exists,
+	populate buffer with extra_chars and don't read
+else,
+	read() into buffer
+
+if there are no extra chars and status <= 0,
+	return NULL
+else,
+	iterate()
+
+Iterate populates gnl.line
+Free gnl.buffer and return gnl.line.
 */
 char	*get_next_line(int fd)
 {
@@ -122,7 +138,6 @@ char	*get_next_line(int fd)
 	init_gnl(fd, &extra_chars, &gnl);
 	if (gnl.extra_exists)
 	{
-		//gnl_bzero(gnl.buffer, BUFFER_SIZE + 1);
 		i = 0;
 		while (extra_chars[i])
 		{
@@ -138,7 +153,6 @@ char	*get_next_line(int fd)
 		free(gnl.buffer);
 		return (NULL);
 	}
-	gnl.line = gnl_bzero(malloc(sizeof(char)), 1);
 	iterate(&gnl);
 	free(gnl.buffer);
 	return (gnl.line);
