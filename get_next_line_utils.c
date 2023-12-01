@@ -3,42 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 08:10:27 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 17:36:31 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/12/01 08:47:18 by crsharrier       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	init_gnl(int fd, char **extra_chars, t_Mem *mem)
+void	init_gnl(int fd, char **extra_chars, t_Gnl *gnl)
 {
-	mem->fd = fd;
-	mem->extra_chars = extra_chars;
-	mem->buffer = gnl_bzero(malloc(BUFFER_SIZE + 1 * sizeof(char)),
-			BUFFER_SIZE + 1);
-	mem->line = NULL;
-	mem->status = 0;
-	mem->nl_found = false;
-	mem->nl_index = 0;
-	mem->extra_exists = false;
+	
+	gnl->fd = fd;
+	gnl->extra_chars = extra_chars;
+	gnl->buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	gnl_bzero(gnl->buffer, BUFFER_SIZE + 1);
+	gnl->line = NULL;
+	gnl->read_status = 0;
+	gnl->nl_found = false;
+	gnl->nl_index = 0;
+	gnl->extra_exists = false;
 	if (*extra_chars && (*extra_chars)[0])
-		mem->extra_exists = true;
+		gnl->extra_exists = true;
 }
 
-void	*gnl_freeplace(char **old, char *new)
+void	*gnl_free_and_replace(char **old, char *new)
 {
 	if (*old)
 		free(*old);
 	*old = new;
 	return (NULL);
-}
-
-char	*exit_gnl(t_Mem *mem, char *rtrn)
-{
-	free(mem->buffer);
-	return (rtrn);
 }
 
 void	*gnl_bzero(void *s, int n)

@@ -3,80 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csharrie <csharrie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crsharrier <crsharrier@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 15:14:14 by crsharrier        #+#    #+#             */
-/*   Updated: 2023/11/30 16:46:10 by csharrie         ###   ########.fr       */
+/*   Updated: 2023/12/01 08:52:00 by crsharrier       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /*
-Copies leftover chars from mem->buffer to mem->line. 
+Copies leftover chars from gnl->buffer to gnl->line. 
 Copies from newline + 1 until end of buffer.
 */
-static void	copy_extra(t_Mem *mem)
+static void	_copy_extra_chars(t_Gnl *gnl)
 {
 	char	*extra;
 	int		i;
 
 	i = 0;
-	while (mem->buffer[mem->nl_index + i + 1])
+	while (gnl->buffer[gnl->nl_index + i + 1])
 		i++;
 	extra = malloc(sizeof(char) * i + 1);
 	extra[i] = '\0';
 	i = 0;
-	while (mem->buffer[mem->nl_index + i + 1])
+	while (gnl->buffer[gnl->nl_index + i + 1])
 	{
-		extra[i] = mem->buffer[mem->nl_index + i + 1];
+		extra[i] = gnl->buffer[gnl->nl_index + i + 1];
 		i++;
 	}
-	gnl_freeplace(mem->extra_chars, extra);
+	gnl_free_and_replace(gnl->extra_chars, extra);
 }
 
 /*
-Append mem->buffer[0:end] to the end of mem->line
+Append gnl->buffer([0:end], non-inclusive) to the end of gnl->line
 */
-static void	append(t_Mem *mem, int end)
+static void	_append_buffer_to_end_of_line(t_Gnl *gnl, int end)
 {
 	int		i;
 	int		j;
 	char	*new_str;
 
 	i = 0;
-	while (mem->line[i])
+	while (gnl->line[i])
 		i++;
 	new_str = malloc(sizeof(char) * (i + end + 1));
 	new_str[i + end] = '\0';
 	i = 0;
-	while (mem->line[i])
+	while (gnl->line[i])
 	{
-		new_str[i] = mem->line[i];
+		new_str[i] = gnl->line[i];
 		i++;
 	}
 	j = 0;
 	while (j < end)
-		new_str[i++] = mem->buffer[j++];
-	gnl_freeplace(&mem->line, new_str);
+		new_str[i++] = gnl->buffer[j++];
+	gnl_free_and_replace(&gnl->line, new_str);
 }
 
 /*
-Searches for first occurrence of '\n' in mem->buffer.
-Sets nl_index accordingly.
+Searches for first occurrence of '\n' in gnl->buffer.
+If found, sets nl_index and nl_found.
 Returns the index of '\n' or '\0', whichever is found first.
 */
-static int	find_newline(t_Mem *mem)
+static int	_find_newline_or_null(t_Gnl *gnl)
 {
 	int	i;
 
 	i = 0;
-	while (mem->buffer[i])
+	while (gnl->buffer[i])
 	{
-		if (mem->buffer[i] == '\n')
+		if (gnl->buffer[i] == '\n')
 		{
-			mem->nl_index = i;
-			mem->nl_found = true;
+			gnl->nl_index = i;
+			gnl->nl_found = true;
 			return (i);
 		}
 		i++;
@@ -84,28 +84,28 @@ static int	find_newline(t_Mem *mem)
 	return (i);
 }
 
-static void	iterate(t_Mem *mem)
+static void	iterate(t_Gnl *gnl)
 {
 	int		end;
 
-	while (!mem->nl_found)
+	while (!gnl->nl_found)
 	{
-		end = find_newline(mem);
-		if (mem->nl_found)
-			end = mem->nl_index + 1;
-		append(mem, end);
-		if (!mem->nl_found)
+		end = _find_newline_or_null(gnl);
+		if (gnl->nl_found)
+			end = gnl->nl_index + 1;
+		_append_buffer_to_end_of_line(gnl, end);
+		if (!gnl->nl_found)
 		{
-			gnl_bzero(mem->buffer, BUFFER_SIZE + 1);
-			mem->status = read(mem->fd, mem->buffer, BUFFER_SIZE);
-			if (!mem->status)
+			gnl_bzero(gnl->buffer, BUFFER_SIZE + 1);
+			gnl->read_status = read(gnl->fd, gnl->buffer, BUFFER_SIZE);
+			if (!gnl->read_status)
 				break ;
 		}
 	}
-	if (mem->nl_found && mem->buffer[mem->nl_index + 1])
-		copy_extra(mem);
+	if (gnl->nl_found && gnl->buffer[gnl->nl_index + 1])
+		_copy_extra_chars(gnl);
 	else
-		gnl_freeplace(mem->extra_chars, NULL);
+		gnl_free_and_replace(gnl->extra_chars, NULL);
 }
 
 /*
@@ -115,29 +115,31 @@ Else, iterate()
 */
 char	*get_next_line(int fd)
 {
-	t_Mem		mem;
+	t_Gnl		gnl;
 	static char	*extra_chars = NULL;
 	int			i;
 
-	init_gnl(fd, &extra_chars, &mem);
-	if (mem.extra_exists)
+	init_gnl(fd, &extra_chars, &gnl);
+	if (gnl.extra_exists)
 	{
-		gnl_bzero(mem.buffer, BUFFER_SIZE + 1);
+		//gnl_bzero(gnl.buffer, BUFFER_SIZE + 1);
 		i = 0;
 		while (extra_chars[i])
 		{
-			mem.buffer[i] = extra_chars[i];
+			gnl.buffer[i] = extra_chars[i];
 			i++;
 		}
 	}
 	else
-		mem.status = read(fd, mem.buffer, BUFFER_SIZE);
-	if ((mem.status == 0 || mem.status == -1) && !mem.extra_exists)
+		gnl.read_status = read(fd, gnl.buffer, BUFFER_SIZE);
+	if ((gnl.read_status <= 0) && !gnl.extra_exists)
 	{
-		gnl_freeplace(&extra_chars, NULL);
-		return (exit_gnl(&mem, NULL));
+		gnl_free_and_replace(&extra_chars, NULL);
+		free(gnl.buffer);
+		return (NULL);
 	}
-	mem.line = gnl_bzero(malloc(sizeof(char)), 1);
-	iterate(&mem);
-	return (exit_gnl(&mem, mem.line));
+	gnl.line = gnl_bzero(malloc(sizeof(char)), 1);
+	iterate(&gnl);
+	free(gnl.buffer);
+	return (gnl.line);
 }
